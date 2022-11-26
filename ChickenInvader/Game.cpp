@@ -10,8 +10,11 @@ void Game::initWindow()
 
 void Game::initTextures()
 {
-	this->textures["BULLET"] = new sf::Texture();
-	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	this->textures["plBULLET"] = new sf::Texture();
+	this->textures["plBULLET"]->loadFromFile("Textures/bullet.png");
+
+	this->textures2["ckBULLET"] = new sf::Texture();
+	this->textures2["ckBULLET"]->loadFromFile("Textures/egg.png");
 }
 
 void Game::initGUI()
@@ -65,10 +68,16 @@ void Game::initPlayer()
 	this->player->setPosition((this->window->getSize().x - this->player->getBounds().width) / 2, (this->window->getSize().y - this->player->getBounds().height));
 }
 
-void Game::initEnemies()
+void Game::initCheckens()
 {
 	this->spawnTimerMax = 50.f;
 	this->spawnTimer = this->spawnTimerMax;
+}
+
+void Game::initckBullets()
+{
+	this->spawnTimerMax = 50.f;
+	this->spawnTimer1 = this->spawnTimerMax;
 }
 
 //Con/Des
@@ -81,7 +90,7 @@ Game::Game()
 	this->initSystems();
 
 	this->initPlayer();
-	this->initEnemies();
+	this->initCheckens();
 }
 
 Game::~Game()
@@ -95,14 +104,20 @@ Game::~Game()
 		delete i.second;
 	}
 
-	//Delete bullets
-	for (auto* i : this->bullets)
+	//Delete plBullets
+	for (auto* i : this->plBullets)
 	{
 		delete i;
 	}
 
-	//Delete enemies
-	for (auto* i : this->enemies)
+	//Delete ckBullets
+	for (auto* i : this->ckBullet)
+	{
+		delete i;
+	}
+
+	//Delete chickens
+	for (auto* i : this->chickens)
 	{
 		delete i;
 	}
@@ -148,15 +163,11 @@ void Game::updateInput()
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->player->canAttack())
 	{
-		this->bullets.push_back(
-			new Bullet(
-				this->textures["BULLET"],
+		this->plBullets.push_back(
+			new plBullet(
+				this->textures["plBULLET"],
 				this->player->getPos().x + this->player->getBounds().width / 2.f,
-				this->player->getPos().y,
-				0.f,
-				-1.f,
-				5.f
-			)
+				this->player->getPos().y,0.f,-1.f,5.f)
 		);
 	}
 }
@@ -204,10 +215,10 @@ void Game::updateCollision()
 	}
 }
 
-void Game::updateBullets()
+void Game::updateplBullets()
 {
 	unsigned counter = 0;
-	for (auto* bullet : this->bullets)
+	for (auto* bullet : this->plBullets)
 	{
 		bullet->update();
 
@@ -215,27 +226,56 @@ void Game::updateBullets()
 		if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
 		{
 			//Delete bullet
-			delete this->bullets.at(counter);
-			this->bullets.erase(this->bullets.begin() + counter);
+			delete this->plBullets.at(counter);
+			this->plBullets.erase(this->plBullets.begin() + counter);
 		}
 
 		++counter;
 	}
 }
 
-void Game::updateEnemies()
+void Game::updateckBullet()
+{
+	unsigned counter = 0;
+	for (auto* bullet : this->ckBullet)
+	{
+		bullet->update();
+
+		//Enemy player collision
+		if (bullet->getBounds().intersects(this->player->getBounds()))
+		{
+		this->player->loseHp(this->ckBullet.at(counter)->getDamage());
+		delete this->ckBullet.at(counter);
+		this->ckBullet.erase(this->ckBullet.begin() + counter);
+		}
+
+		/*
+		//Bullet culling (top of screen)
+		if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
+		{
+			//Delete bullet
+			delete this->plBullets.at(counter);
+			this->ckBullet.erase(this->ckBullet.begin() + counter);
+		}
+		*/
+		++counter;
+	}
+}
+
+void Game::updateCheckens()
 {
 	//Spawning
 	this->spawnTimer += 0.5f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
-		this->enemies.push_back(new Enemy(*this->window));
+		this->chickens.push_back(new Checkens(*this->window));
 		this->spawnTimer = 0.f;
+		
 	}
 
 	//Update
 	unsigned counter = 0;
-	for (auto* enemy : this->enemies)
+	for (auto* enemy : this->chickens)
 	{
 		enemy->update();
 
@@ -243,37 +283,48 @@ void Game::updateEnemies()
 		if (enemy->getBounds().top > this->window->getSize().y)
 		{
 			//Delete enemy
-			delete this->enemies.at(counter);
-			this->enemies.erase(this->enemies.begin() + counter);
+			delete this->chickens.at(counter);
+			this->chickens.erase(this->chickens.begin() + counter);
 		}
-		//Enemy player collision
-		else if (enemy->getBounds().intersects(this->player->getBounds()))
-		{
-			this->player->loseHp(this->enemies.at(counter)->getDamage());
-			delete this->enemies.at(counter);
-			this->enemies.erase(this->enemies.begin() + counter);
-		}
+		
 
+		//Spawning
+		this->spawnTimer += 0.1f;
+		if (this->spawnTimer >= this->spawnTimerMax)
+		{
+			this->ckBullet.push_back(
+				new ckBullets(
+					this->textures2["ckBULLET"],
+					enemy->getPos().x + enemy->getBounds().width / 2.f - 8.f,
+					enemy->getPos().y + enemy->getBounds().height / 2.f , 0.f, 1.f, 1.f)
+			);
+			this->spawnTimer = 0.f;
+
+		}
 		++counter;
 	}
 }
 
 void Game::updateCombat()
 {
-	for (int i = 0; i < this->enemies.size(); ++i)
+	for (int i = 0; i < this->chickens.size(); ++i)
 	{
+		
+		
 		bool enemy_deleted = false;
-		for (size_t k = 0; k < this->bullets.size() && enemy_deleted == false; k++)
+		for (size_t k = 0; k < this->plBullets.size() && enemy_deleted == false; k++)
 		{
-			if (this->enemies[i]->getBounds().intersects(this->bullets[k]->getBounds()))
+			
+
+			if (this->chickens[i]->getBounds().intersects(this->plBullets[k]->getBounds()))
 			{
-				this->points += this->enemies[i]->getPoints();
+				this->points += this->chickens[i]->getPoints();
 
-				delete this->enemies[i];
-				this->enemies.erase(this->enemies.begin() + i);
+				delete this->chickens[i];
+				this->chickens.erase(this->chickens.begin() + i);
 
-				delete this->bullets[k];
-				this->bullets.erase(this->bullets.begin() + k);
+				delete this->plBullets[k];
+				this->plBullets.erase(this->plBullets.begin() + k);
 
 				enemy_deleted = true;
 			}
@@ -289,9 +340,11 @@ void Game::update()
 
 	this->updateCollision();
 
-	this->updateBullets();
+	this->updateplBullets();
 
-	this->updateEnemies();
+	this->updateckBullet();
+
+	this->updateCheckens();
 
 	this->updateCombat();
 
@@ -323,12 +376,17 @@ void Game::render()
 	this->player->render(*this->window);
 	
 
-	for (auto* bullet : this->bullets)
+	for (auto* bullet : this->plBullets)
 	{
 		bullet->render(this->window);
 	}
 
-	for (auto* enemy : this->enemies)
+	for (auto* ckBullet : this->ckBullet)
+	{
+		ckBullet->render(this->window);
+	}
+
+	for (auto* enemy : this->chickens)
 	{
 		enemy->render(this->window);
 	}

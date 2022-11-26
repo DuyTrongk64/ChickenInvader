@@ -3,12 +3,12 @@
 
 void Checkens::initVariables()
 {
-	this->pointCount = 5; //min = 3 max = 10
+	this->pointCount = 5;
 	this->type = 0;
-	this->speed = 0.3f;
+	this->speed = 0.1f;
 	this->hpMax = static_cast<int>(this->pointCount);
 	this->hp = this->hpMax;
-	this->damage = this->pointCount;
+	
 	this->points = this->pointCount;
 }
 
@@ -29,7 +29,8 @@ void Checkens::initSprite(const sf::RenderWindow& window)
 	//Resize the sprite
 	this->sprite.scale(0.1f, 0.1f);
 
-	this->sprite.setPosition(sf::Vector2f(static_cast<float>(rand() % window.getSize().x - this->sprite.getGlobalBounds().width),0.f));
+	this->sprite.setPosition(sf::Vector2f(static_cast<float>(rand() % (window.getSize().x - (int)this->sprite.getGlobalBounds().width) + 0.f), 0.f));
+	
 }
 
 
@@ -72,6 +73,10 @@ void Checkens::setPosition(const float x, const float y)
 	this->sprite.setPosition(x, y);
 }
 
+const sf::Vector2f& Checkens::getPos() const
+{
+	return this->sprite.getPosition();
+}
 //Functions
 void Checkens::update()
 {

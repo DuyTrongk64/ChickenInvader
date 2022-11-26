@@ -5,6 +5,8 @@
 #include<SFML/System.hpp>
 #include<iostream>
 
+
+
 class Checkens
 {
 private:
@@ -12,6 +14,7 @@ private:
 	sf::Texture texture;
 	unsigned pointCount;
 	
+
 	int type;
 	float speed;
 	int hp;
@@ -31,6 +34,8 @@ public:
 	const sf::FloatRect getBounds() const;
 	const int& getPoints() const;
 	const int& getDamage() const;
+	const sf::Vector2f& getPos() const;
+
 	//Modifier
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(const float x, const float y);

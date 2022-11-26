@@ -4,8 +4,9 @@
 #include<string>
 #include<sstream>
 #include"Player.h"
-#include"Bullet.h"
-#include"Enemy.h"
+#include"plBullet.h"
+#include"Chickens.h"
+#include "ckBullets.h"
 
 class Game
 {
@@ -15,7 +16,9 @@ private:
 
 	//Resources
 	std::map<std::string, sf::Texture*> textures;
-	std::vector<Bullet*> bullets;
+	std::map<std::string, sf::Texture*> textures2;
+	std::vector<plBullet*> plBullets;
+	std::vector<ckBullets*> ckBullet;
 
 	//GUI
 	sf::Font font;
@@ -32,7 +35,7 @@ private:
 
 	//Player
 	Player* player;
-	
+	//Checkens* chickens;
 
 	//PlayerGUI
 	sf::RectangleShape playerHpBar;
@@ -41,8 +44,10 @@ private:
 	//Enemies
 	float spawnTimer;
 	float spawnTimerMax;
-	std::vector<Enemy*> enemies;
+	std::vector<Checkens *> chickens;
 
+	float spawnTimer1;
+	float spawnTimerMax1;
 	//Private functions
 	void initWindow();
 	void initTextures();
@@ -51,7 +56,8 @@ private:
 	void initSystems();
 
 	void initPlayer();
-	void initEnemies();
+	void initCheckens();
+	void initckBullets();
 
 public:
 	Game();
@@ -65,8 +71,9 @@ public:
 	void updateGUI();
 	void updateWorld();
 	void updateCollision();
-	void updateBullets();
-	void updateEnemies();
+	void updateplBullets();
+	void updateckBullet();
+	void updateCheckens();
 	void updateCombat();
 	void update();
 
