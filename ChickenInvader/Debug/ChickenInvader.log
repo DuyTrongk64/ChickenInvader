@@ -1,2 +1,11 @@
-﻿  ckBullets.cpp
+﻿  Chickens.cpp
+C:\Users\Admin\Documents\chicken\ChickenInvader\ChickenInvader\Chickens.cpp(89,29): warning C4244: '+=': conversion from 'float' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+  Game.cpp
+C:\Users\Admin\Documents\chicken\ChickenInvader\ChickenInvader\Game.cpp(310,20): warning C4018: '<': signed/unsigned mismatch
+  Main.cpp
+  Generating Code...
   ChickenInvader.vcxproj -> C:\Users\Admin\Documents\chicken\ChickenInvader\ChickenInvader\Debug\ChickenInvader.exe

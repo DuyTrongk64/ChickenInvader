@@ -15,6 +15,9 @@ private:
 	unsigned pointCount;
 	
 
+	//Animation
+	sf::IntRect currentFrame;
+
 	int type;
 	float speed;
 	int hp;
@@ -25,6 +28,7 @@ private:
 	void initVariables();
 	void initTexture();
 	void initSprite(const sf::RenderWindow& window);
+	void initAnimations();
 
 public:
 	Checkens(const sf::RenderWindow& window);
@@ -41,6 +45,7 @@ public:
 	void setPosition(const float x, const float y);
 
 	//Functions
+	void updateAnimations();
 	void update();
 	void render(sf::RenderTarget* target);
 };
