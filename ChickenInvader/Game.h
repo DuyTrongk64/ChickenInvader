@@ -1,84 +1,56 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
-#include<map>
-#include<string>
-#include<sstream>
-#include"Player.h"
-#include"plBullet.h"
-#include"Chickens.h"
-#include "ckBullets.h"
+#include "lib.h"
+#include "LoginState.h"
 
 class Game
 {
 private:
-	//Window
+	//Variables
+	
 	sf::RenderWindow* window;
+	sf::Event sfEvent;
 
-	//Resources
-	std::map<std::string, sf::Texture*> textures;
-	std::map<std::string, sf::Texture*> textures2;
-	std::vector<plBullet*> plBullets;
-	std::vector<ckBullets*> ckBullet;
+	sf::Clock dtClock;
+	float dt;
 
-	//GUI
-	sf::Font font;
-	sf::Text pointText;
+	std::stack<State*> states;
 
-	sf::Text gameOverText;
+	std::map<std::string, int> supportedKeys;
 
-	//World
-	sf::Texture worldBackgroundTex;
-	sf::Sprite worldBackground;
+	float gridSize;
 
-	//Systems
-	unsigned points;
+	bool inmain = true;
 
-	//Player
-	Player* player;
-	//Checkens* chickens;
-
-	//PlayerGUI
-	sf::RectangleShape playerHpBar;
-	sf::RectangleShape playerHpBarBack;
-
-	//Enemies
-	float spawnTimer;
-	float spawnTimerMax;
-	std::vector<Checkens *> chickens;
-
-	float spawnTimer1;
-	float spawnTimerMax1;
-	//Private functions
+	//Initialization
+	void initVariables();
+	
 	void initWindow();
-	void initTextures();
-	void initGUI();
-	void initWorld();
-	void initSystems();
+	void initKeys();
 
-	void initPlayer();
-	void initCheckens();
-	void initckBullets();
+	void initStates();
 
 public:
+	//Constructors/Destructors
 	Game();
 	virtual ~Game();
 
 	//Functions
-	void run();
 
-	void updatePollEvents();
-	void updateInput();
-	void updateGUI();
-	void updateWorld();
-	void updateCollision();
-	void updateplBullets();
-	void updateckBullet();
-	void updateCheckens();
-	void updateCombat();
+	//Regular
+	void endApplication();
+
+	//Update
+	void updateDt();
+	void updateSFMLEvents();
 	void update();
 
-	void renderGUI();
-	void renderWorld();
+	//Render
 	void render();
+
+	//Core
+	void run();
 };
 
+#endif

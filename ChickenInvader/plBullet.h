@@ -1,12 +1,11 @@
 #ifndef plBullet_H
 #define plBullet_H
 
-#include<SFML/Graphics.hpp>
-#include<iostream>
+#include "lib.h"
 
 class plBullet
 {
-private:
+protected:
 
 	sf::Sprite shape;
 

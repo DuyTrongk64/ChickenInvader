@@ -1,12 +1,10 @@
 #pragma once
 
-#include<SFML/Graphics.hpp>
-#include<SFML/System.hpp>
-#include<iostream>
+#include "lib.h"
 
 class Player
 {
-private:
+protected:
 	sf::Sprite sprite;
 	sf::Texture texture;
 

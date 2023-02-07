@@ -1,12 +1,10 @@
 #ifndef ckBullets_H
 #define ckBullets_H
 
-#include<SFML/Graphics.hpp>
-#include<iostream>
-
+#include "lib.h"
 class ckBullets
 {
-private:
+protected:
 	sf::Sprite sprite;
 
 	sf::Vector2f direction;

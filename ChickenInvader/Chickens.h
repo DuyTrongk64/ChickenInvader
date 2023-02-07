@@ -1,15 +1,13 @@
 #ifndef Checkens_H
 #define Checkens_H
 
-#include<SFML/Graphics.hpp>
-#include<SFML/System.hpp>
-#include<iostream>
+#include "lib.h"
 
 
 
 class Checkens
 {
-private:
+protected:
 	sf::Sprite sprite;
 	sf::Texture texture;
 	unsigned pointCount;
