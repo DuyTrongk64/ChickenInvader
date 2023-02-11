@@ -130,7 +130,7 @@ LoginState::~LoginState()
 
 void LoginState::endState()
 {
-	std::cout << "End main state" << "\n";
+	std::cout << "End login state" << "\n";
 }
 
 void LoginState::addplayer(std::string user_name, std::string pass_word)

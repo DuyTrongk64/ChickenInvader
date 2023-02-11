@@ -65,7 +65,7 @@ MainMenuState::~MainMenuState()
 
 void MainMenuState::endState()
 {
-	std::cout << "End main state" << "\n";
+	std::cout << "End menu state" << "\n";
 }
 
 void MainMenuState::updateButtons()
@@ -77,9 +77,7 @@ void MainMenuState::updateButtons()
 
 	if (this->buttons["PLAY_VS_AI"]->isPressed())
 	{
-		this->quit = true;
 		this->states->push(new GameState(this->window, this->supportedKeys,this->states));
-		
 	}
 	if (this->buttons["EXIT"]->isPressed())
 	{

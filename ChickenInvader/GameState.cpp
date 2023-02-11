@@ -3,21 +3,22 @@
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	: State(window,supportedKeys,states)
 {
-	this->initWindow();
+	//this->initWindow();
 	this->initTextures();
-	this->initGUI();
 	this->initWorld();
+	this->initGUI();
+	
 	this->initSystems();
 
 	this->initPlayer();
 	this->initCheckens();
-	this->initButtons();
+	
 	this->run();
 }
 
 GameState::~GameState()
 {
-	delete this->window;
+	//delete this->window;
 	delete this->player;
 
 	//Delete textures
@@ -44,41 +45,17 @@ GameState::~GameState()
 		delete i;
 	}
 
-	//Delete buttons
-	auto it = this->buttons.begin();
-
-	for (it = this->buttons.begin(); it != this->buttons.end(); ++it)
-	{
-		delete it->second;
-	}
 }
 
 //Private functions
-void GameState::initWindow()
-{
-	this->window = new sf::RenderWindow(sf::VideoMode(800, 600), "Swaglords of Space - Game 3", sf::Style::Close | sf::Style::Titlebar);
-	this->window->setFramerateLimit(144);
-	this->window->setVerticalSyncEnabled(false);
-}
 
 void GameState::initTextures()
 {
 	this->textures["plBULLET"] = new sf::Texture();
 	this->textures["plBULLET"]->loadFromFile("Textures/bullet.png");
 
-	this->textures2["ckBULLET"] = new sf::Texture();
-	this->textures2["ckBULLET"]->loadFromFile("Textures/egg.png");
-}
-
-void GameState::initButtons()
-{
-	this->buttons["PL_AGAIN"] = new Buttons(this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
-		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f +20, 100, 30, &this->font, "Play again");
-	//this->buttons["PL_AGAIN"]->setTextSize(50);
-
-	this->buttons["EXIT"] = new Buttons(this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
-		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f + 100, 100, 30, &this->font, "Exit");
-	//this->buttons["EXIT"]->setTextSize(50);
+	this->textures["ckBULLET"] = new sf::Texture();
+	this->textures["ckBULLET"]->loadFromFile("Textures/egg.png");
 }
 
 void GameState::initGUI()
@@ -101,6 +78,22 @@ void GameState::initGUI()
 	this->gameOverText.setPosition(
 		this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
 		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f - 60);
+
+	this->text["PLAY_AGAIN"].setFont(this->font);
+	this->text["PLAY_AGAIN"].setCharacterSize(60);
+	this->text["PLAY_AGAIN"].setFillColor(sf::Color::White);
+	this->text["PLAY_AGAIN"].setString("Play again");
+	this->text["PLAY_AGAIN"].setPosition(
+		this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
+		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f +20);
+
+	this->text["EXIT"].setFont(this->font);
+	this->text["EXIT"].setCharacterSize(60);
+	this->text["EXIT"].setFillColor(sf::Color::White);
+	this->text["EXIT"].setString("Exit");
+	this->text["EXIT"].setPosition(
+		this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
+		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f + 100);
 
 	
 
@@ -164,7 +157,7 @@ void GameState::initKeybinds()
 }
 void GameState::endState()
 {
-	std::cout << "End state" << "\n";
+	std::cout << "End game" << "\n";
 }
 
 void GameState::updateKeybinds()
@@ -175,31 +168,20 @@ void GameState::updateKeybinds()
 //Functions
 void GameState::run()
 {
-	while (this->window->isOpen())
-	{
-		this->updatePollEvents();
+	this->updateKeybinds();
 
-		if (this->player->getHp() > 0)
-			this->update(this->dt);
-		else
-		{
-			this->updateButtons();
-		}
-		this->render();
-	}
+	this->updateText();
+
+	if (this->player->getHp() > 0)
+		this->update(this->dt);
+;
+	/*if (this->time.getElapsedTime().asSeconds() > 5)
+		this->window->close();*/
+
+	this->render();
 }
 
-void GameState::updatePollEvents()
-{
-	sf::Event e;
-	while (this->window->pollEvent(e))
-	{
-		if (e.Event::type == sf::Event::Closed)
-			this->window->close();
-		if (e.Event::KeyPressed && e.Event::key.code == sf::Keyboard::Escape)
-			this->window->close();
-	}
-}
+
 
 void GameState::updateInput()
 {
@@ -235,6 +217,25 @@ void GameState::updateGUI()
 	//Update player GUI
 	float hpPercent = static_cast<float>(this->player->getHp()) / this->player->getHpMax();
 	this->playerHpBar.setSize(sf::Vector2f(300.f * hpPercent, this->playerHpBar.getSize().y));
+}
+
+void GameState::updateText()
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		if (this->text["PLAY_AGAIN"].getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*this->window))))
+		{
+			this->text["PLAY_AGAIN"].setFillColor(sf::Color::Red);
+			
+		}
+
+		if (this->text["EXIT"].getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*this->window))))
+		{
+			this->text["EXIT"].setFillColor(sf::Color::Red);
+			std::cout << "quit game\n";
+			this->quit = true;
+		}
+	}
 }
 
 void GameState::updateWorld()
@@ -346,7 +347,7 @@ void GameState::updateCheckens()
 		{
 			this->ckBullet.push_back(
 				new ckBullets(
-					this->textures2["ckBULLET"],
+					this->textures["ckBULLET"],
 					enemy->getPos().x + enemy->getBounds().width / 2.f - 8.f,
 					enemy->getPos().y + enemy->getBounds().height / 2.f, 0.f, 1.f, 1.f)
 			);
@@ -384,27 +385,6 @@ void GameState::updateCombat()
 	}
 }
 
-void GameState::updateButtons()
-{
-	for (auto& it : this->buttons)
-	{
-		it.second->update(this->mousePosView);
-	}
-
-	if (this->buttons["PL_AGAIN"]->isPressed())
-	{
-		
-	}
-	if (this->buttons["EXIT"]->isPressed())
-	{
-		std::cout << "clicked exit";
-		this->quit = true;
-	}
-}
-
-
-
-
 void GameState::update(const float& dt)
 {
 	this->updateInput();
@@ -426,7 +406,7 @@ void GameState::update(const float& dt)
 	this->updateWorld();
 	this->updateMousePositions();
 	this->updateKeybinds();
-	this->updateButtons();
+	this->updateText();
 }
 
 void GameState::renderGUI()
@@ -441,38 +421,33 @@ void GameState::renderWorld()
 	this->window->draw(this->worldBackground);
 }
 
-void GameState::renderButtons(sf::RenderTarget* target)
-{
-	for (auto& it : this->buttons)
-	{
-		it.second->render(target);
-	}
-}
-
 void GameState::render(sf::RenderTarget* target)
 {
-	this->window->clear();
+	if (!target)
+		target = this->window;
+	
+
 
 	//Draw world
 	this->renderWorld();
 
 	//Draw all the stuffs
-	this->player->render(*this->window);
+	this->player->render(*target);
 
 
 	for (auto* bullet : this->plBullets)
 	{
-		bullet->render(this->window);
+		bullet->render(target);
 	}
 
 	for (auto* ckBullet : this->ckBullet)
 	{
-		ckBullet->render(this->window);
+		ckBullet->render(target);
 	}
 
 	for (auto* enemy : this->chickens)
 	{
-		enemy->render(this->window);
+		enemy->render(target);
 	}
 
 	this->renderGUI();
@@ -480,11 +455,11 @@ void GameState::render(sf::RenderTarget* target)
 	//Game over screen
 	if (this->player->getHp() <= 0)
 	{
-		this->window->draw(this->gameOverText);
-		if (!target)
-			target = this->window;
-		this->renderButtons(target);
+		target->draw(this->gameOverText);
+		
+		target->draw(this->text["PLAY_AGAIN"]);
+
+		target->draw(this->text["EXIT"]);
 	}
 
-	this->window->display();
 }
