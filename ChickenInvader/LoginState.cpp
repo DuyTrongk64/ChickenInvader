@@ -94,14 +94,37 @@ void LoginState::initTextbox(std::string text)
 	}
 }
 
+void LoginState::initText()
+{
+	this->text["USER_NAME"].setFont(this->font);
+	this->text["USER_NAME"].setCharacterSize(20);
+	this->text["USER_NAME"].setFillColor(sf::Color::White);
+	this->text["USER_NAME"].setString("User name");
+	this->text["USER_NAME"].setPosition(355, 300);
 
+	this->text["PASS_WORD"].setFont(this->font);
+	this->text["PASS_WORD"].setCharacterSize(20);
+	this->text["PASS_WORD"].setFillColor(sf::Color::White);
+	this->text["PASS_WORD"].setString("Pass word");
+	this->text["PASS_WORD"].setPosition(355, 400);
+}
+
+void LoginState::initBorder()
+{
+	border.setFillColor(sf::Color::Transparent);
+	border1.setFillColor(sf::Color::Transparent);
+	border.setOutlineThickness(2);
+	border1.setOutlineThickness(2);
+	border.setSize(sf::Vector2f(this->text["USER_NAME"].getCharacterSize()
+		* this->text["USER_NAME"].getString().getSize() / 1.9 + 30, 1.5 * this->text["USER_NAME"].getCharacterSize()));
+	border.setPosition(this->text["USER_NAME"].getPosition().x-20, this->text["USER_NAME"].getPosition().y);
+	border1.setSize(sf::Vector2f(this->text["USER_NAME"].getCharacterSize()
+		* this->text["USER_NAME"].getString().getSize() / 1.9 + 30, 1.5 * this->text["USER_NAME"].getCharacterSize()));
+	border1.setPosition(this->text["PASS_WORD"].getPosition().x-20, this->text["PASS_WORD"].getPosition().y);
+}
 
 void LoginState::initButtons()
 {
-	this->buttons["USER_NAME"] = new Buttons(325, 300, 150, 50, &this->font, "User name");
-
-	this->buttons["PASS_WORD"] = new Buttons(325, 400, 150, 50, &this->font, "Pass word");
-
 	this->buttons["LOG_IN"] = new Buttons(200, 500, 150, 50, &this->font, "Log in");
 
 	this->buttons["SIGN_IN"] = new Buttons(450, 500, 150, 50, &this->font, "Sign in");
@@ -114,7 +137,8 @@ LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* sup
 	this->intKeybinds();
 	this->initButtons();
 	this->initWorld();
-
+	this->initText();
+	this->initBorder();
 }
 
 LoginState::~LoginState()
@@ -127,7 +151,6 @@ LoginState::~LoginState()
 	}
 }
 
-
 void LoginState::endState()
 {
 	std::cout << "End login state" << "\n";
@@ -138,6 +161,26 @@ void LoginState::addplayer(std::string user_name, std::string pass_word)
 
 }
 
+void LoginState::updateText()
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		if (this->text["USER_NAME"].getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*this->window))))
+		{
+			this->initTextbox("User name");
+			this->user_name = std::string(this->yours.getString());
+			this->text["USER_NAME"].setString(std::string(this->yours.getString()));
+		}
+
+		if (this->text["PASS_WORD"].getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(*this->window))))
+		{
+			this->initTextbox("Pass word");
+			this->pass_word = std::string(this->yours.getString());
+			this->text["PASS_WORD"].setString(std::string(this->yours.getString()));
+		}
+	}
+
+}
 
 void LoginState::updateButtons()
 {
@@ -146,29 +189,16 @@ void LoginState::updateButtons()
 		it.second->update(this->mousePosView);
 	}
 
-	if (this->buttons["USER_NAME"]->isPressed())
-	{
-		this->initTextbox("User name");
-		this->user_name = std::string(this->yours.getString());
-		this->buttons["USER_NAME"]->setText(std::string(this->yours.getString()));
-	}
-	if (this->buttons["PASS_WORD"]->isPressed())
-	{
-		this->initTextbox("Pass word");
-		this->pass_word = std::string(this->yours.getString());
-		this->buttons["PASS_WORD"]->setText(std::string(this->yours.getString()));
-	}
+	
 	if (this->buttons["LOG_IN"]->isPressed())
 	{
 		this->states->push(new MainMenuState(this->window, this->supportedKeys, this->states));
 	}
 	if (this->buttons["SIGN_IN"]->isPressed())
 	{
-		//this->client->login(this->user_name,this->pass_word);
+		//printf("dm son linh");
 	}
 }
-
-
 
 void LoginState::updateKeybinds(const float& dt)
 {
@@ -182,6 +212,21 @@ void LoginState::update(const float& dt)
 
 	this->updateButtons();
 	
+	this->updateText();
+}
+
+void LoginState::renderText(sf::RenderTarget* target)
+{
+	for (auto& it : this->text)
+	{
+		target->draw(it.second);
+	}
+}
+
+void LoginState::renderBorder(sf::RenderTarget* target)
+{
+	target->draw(this->border);
+	target->draw(this->border1);
 }
 
 void LoginState::renderButtons(sf::RenderTarget* target)
@@ -192,8 +237,6 @@ void LoginState::renderButtons(sf::RenderTarget* target)
 	}
 }
 
-
-
 void LoginState::render(sf::RenderTarget* target)
 {
 	if (!target)
@@ -202,8 +245,10 @@ void LoginState::render(sf::RenderTarget* target)
 	target->draw(this->worldBackground);
 	
 	this->renderButtons(target);
+
+	this->renderText(target);
 	
-	
+	this->renderBorder(target);
 }
 
 std::string LoginState::fromKtoS(const sf::Keyboard::Key& k) {

@@ -136,7 +136,6 @@
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Chickens.cpp" />
     <ClCompile Include="ckBullets.cpp" />
-    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="LoginState.cpp" />
@@ -149,12 +148,13 @@
     <ClCompile Include="Textbox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Account.h" />
     <ClInclude Include="Buttons.h" />
     <ClInclude Include="Chickens.h" />
     <ClInclude Include="ckBullets.h" />
-    <ClInclude Include="Client.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Handler.h" />
     <ClInclude Include="lib.h" />
     <ClInclude Include="LoginState.h" />
     <ClInclude Include="MainMenuState.h" />

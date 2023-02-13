@@ -1,3 +1,49 @@
-﻿  GameState.cpp
-C:\Users\Admin\Documents\chicken\ChickenInvader\ChickenInvader\GameState.cpp(363,20): warning C4018: '<': signed/unsigned mismatch
-  ChickenInvader.vcxproj -> C:\Users\Admin\Documents\chicken\ChickenInvader\ChickenInvader\Debug\ChickenInvader.exe
+﻿  LoginState.cpp
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\Textbox.h(47,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(47,42): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(60,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(61,109): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(61,84): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(62,63): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(62,43): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(119,67): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(119,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(122,67): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\LoginState.cpp(122,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  ChickenInvader.vcxproj -> C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\Debug\ChickenInvader.exe

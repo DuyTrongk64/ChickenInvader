@@ -13,7 +13,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initPlayer();
 	this->initCheckens();
 	
-	this->run();
+	//this->run();
 }
 
 GameState::~GameState()
@@ -168,12 +168,16 @@ void GameState::updateKeybinds()
 //Functions
 void GameState::run()
 {
+
 	this->updateKeybinds();
 
 	this->updateText();
-
-	if (this->player->getHp() > 0)
-		this->update(this->dt);
+	while (1)
+	{
+		if (this->player->getHp() > 0)
+			this->update(this->dt);
+	}
+	
 ;
 	/*if (this->time.getElapsedTime().asSeconds() > 5)
 		this->window->close();*/
@@ -387,26 +391,31 @@ void GameState::updateCombat()
 
 void GameState::update(const float& dt)
 {
-	this->updateInput();
-
-	this->player->update();
-
-	this->updateCollision();
-
-	this->updateplBullets();
-
-	this->updateckBullet();
-
-	this->updateCheckens();
-
-	this->updateCombat();
-
-	this->updateGUI();
-
-	this->updateWorld();
-	this->updateMousePositions();
 	this->updateKeybinds();
 	this->updateText();
+
+	if(this->player->getHp() > 0)
+	{
+		this->updateInput();
+
+		this->player->update();
+
+		this->updateCollision();
+
+		this->updateplBullets();
+
+		this->updateckBullet();
+
+		this->updateCheckens();
+
+		this->updateCombat();
+
+		this->updateGUI();
+
+		this->updateWorld();
+		this->updateMousePositions();
+		
+	}
 }
 
 void GameState::renderGUI()

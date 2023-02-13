@@ -15,7 +15,6 @@ private:
 	
 	std::vector<plBullet*> plBullets;
 	std::vector<ckBullets*> ckBullet;
-	//std::map<std::string, Buttons*> buttons;
 
 	//GUI
 	sf::Font font;
@@ -84,11 +83,11 @@ public:
 	void updateCheckens();
 	void updateCombat();
 
-	void update(const float& dt);
+	virtual void update(const float& dt);
 
 	void renderGUI();
 	void renderWorld();
-	void render(sf::RenderTarget* target = NULL);
+	virtual void render(sf::RenderTarget* target = NULL);
     
 };
 

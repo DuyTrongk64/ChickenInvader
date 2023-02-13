@@ -17,6 +17,8 @@ protected:
     sf::Font font;
 
     std::map<std::string, Buttons*> buttons;
+    std::map<std::string, sf::Text> text;
+    sf::RectangleShape border, border1;
     //Client* client;
 
     sf::Text mine;
@@ -39,6 +41,8 @@ protected:
     void initButtons();
     void initWorld();
     void initTextbox(std::string text);
+    void initText();
+    void initBorder();
 public:
     
     LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
@@ -48,12 +52,14 @@ public:
     std::string fromKtoS(const sf::Keyboard::Key& k);
     void endState();
     void addplayer(std::string user_name, std::string pass_word );
-    
+    void updateText();
     void updateButtons();
    
     void updateKeybinds(const float& dt);
     virtual void update(const float& dt);
 
+    void renderText(sf::RenderTarget* target);
+    void renderBorder(sf::RenderTarget* target);
     void renderButtons(sf::RenderTarget* target);
     
     virtual void render(sf::RenderTarget* target = NULL);
