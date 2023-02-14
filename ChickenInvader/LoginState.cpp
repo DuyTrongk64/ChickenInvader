@@ -1,12 +1,5 @@
 #include "LoginState.h"
 
-extern conn_msg_type conn_msg;
-extern char username[20];
-extern char password[20];
-extern int bytes_received;
-extern int bytes_sent;
-extern int client_sock;
-
 void LoginState::initFonts()
 {
 	if (!this->font.loadFromFile("Fonts/Dosis-Light.ttf"))
@@ -136,8 +129,8 @@ void LoginState::initButtons()
 	this->buttons["SIGN_IN"] = new Buttons(450, 500, 150, 50, &this->font, "Sign in");
 }
 
-LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	:State(window, supportedKeys, states)
+LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, Handler* handler)
+	:State(window, supportedKeys, states,handler)
 {
 	
 	this->initFonts();
@@ -146,6 +139,7 @@ LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* sup
 	this->initWorld();
 	this->initText();
 	this->initBorder();
+	this->initSocket();
 }
 
 LoginState::~LoginState()
@@ -209,14 +203,14 @@ void LoginState::updateButtons()
 	
 	if (this->buttons["LOG_IN"]->isPressed())
 	{
-		strcpy(username, this->user_name.c_str());
-		str_trim_lf(username, strlen(username));
-		strcpy(password, this->pass_word.c_str());
-		str_trim_lf(password, strlen(password));
-		if (login(username, password))
-			this->states->push(new MainMenuState(this->window, this->supportedKeys, this->states));
-		else
-		std::cout << "dang nhap that bai\n";
+		strcpy(this->username, this->user_name.c_str());
+		//handler->str_trim_lf(this->username, strlen(username));
+		strcpy(this->password, this->pass_word.c_str());
+		//handler->str_trim_lf(this->password, strlen(password));
+		std::cout << this->username<<"\t"<< this->password<<"\n";
+		this->handler->join(this->username);
+		this->states->push(new MainMenuState(this->window, this->supportedKeys, this->states, this->handler));
+		
 		//messs();
 	}
 	if (this->buttons["SIGN_IN"]->isPressed())

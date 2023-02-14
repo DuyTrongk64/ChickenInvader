@@ -5,155 +5,13 @@
 #define MAX_CLIENTS 100
 #define BUFFER_SZ 2048
 
-static _Atomic unsigned int cli_count = 0;
-static int uid = 10;
 linkedList list;
+// Global variables
+client_room_type client_room;
 
-/* Client structure */
-typedef struct {
-	struct sockaddr_in address;
-	int sockfd;
-	int uid;
-	char name[20];
-	char pass[20];
-	int status;
-	int hight_point;
-	int cur_point;
-} client_t;
-
-client_t* clients[MAX_CLIENTS];
-
-pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-conn_data_type conn_data;
-conn_msg_type conn_msg;
-
-void print_client_addr(struct sockaddr_in addr) {
-	printf("%d.%d.%d.%d",
-		addr.sin_addr.s_addr & 0xff,
-		(addr.sin_addr.s_addr & 0xff00) >> 8,
-		(addr.sin_addr.s_addr & 0xff0000) >> 16,
-		(addr.sin_addr.s_addr & 0xff000000) >> 24);
-}
-
-/* Add clients to queue */
-void queue_add(client_t* cl) {
-	pthread_mutex_lock(&clients_mutex);
-
-	for (int i = 0; i < MAX_CLIENTS; ++i) {
-		if (!clients[i]) {
-			clients[i] = cl;
-			break;
-		}
-	}
-
-	pthread_mutex_unlock(&clients_mutex);
-}
-
-/* Remove clients to queue */
-void queue_remove(int uid) {
-	pthread_mutex_lock(&clients_mutex);
-
-	for (int i = 0; i < MAX_CLIENTS; ++i) {
-		if (clients[i]) {
-			if (clients[i]->uid == uid) {
-				clients[i] = NULL;
-				break;
-			}
-		}
-	}
-
-	pthread_mutex_unlock(&clients_mutex);
-}
-
-/* Send message to all clients except sender */
-void send_message(char* s, int uid, int sel) {
-	pthread_mutex_lock(&clients_mutex);
-
-	for (int i = 0; i < MAX_CLIENTS; ++i) {
-		if (clients[i]) {
-			if (clients[i]->uid != uid) {
-				if (write(clients[i]->sockfd, s, strlen(s)) < 0) {
-					perror("ERROR: write to descriptor failed");
-					break;
-				}
-			}
-		}
-	}
-
-	pthread_mutex_unlock(&clients_mutex);
-}
 
 /* Handle all communication with the client */
-void* handle_client(void* arg) {
-	char buff_out[BUFFER_SZ];
-	char name[20];
-	char pass[20];
-	char server_mesg[1024];
-	int leave_flag = 0;
-
-	cli_count++;
-	client_t* cli = (client_t*)arg;
-
-	//get username
-	if (recv(cli->sockfd, name, 20, 0) != 1)
-		printf("ko nhan dc username\n");
-
-	//get password
-	if(recv(cli->sockfd, pass, 20, 0)!=1)
-		printf("ko nhan dc password\n");
-
-	if (sizeof(name) > 0 && sizeof(pass) > 0) {
-		if (getUserAndPass(&list, name, pass) == 1) {
-			strcpy(server_mesg, "User signed in!\n");
-			send(cli->sockfd, server_mesg, sizeof(server_mesg), 0);
-			strcpy(cli->name, name);
-			sprintf(buff_out, "%s has joined\n", cli->name);
-			printf("%s", buff_out);
-			send_message(buff_out, cli->uid, 1);
-
-		}
-		else if (getUserAndPass(&list, name, pass) == 0)
-		{
-			strcpy(server_mesg, "Account not ready\n");
-			send(cli->sockfd, server_mesg, sizeof(server_mesg), 0);
-		}
-
-		else
-		{
-			strcpy(server_mesg, "Username is incorrect, please try again\n");
-			send(cli->sockfd, server_mesg, sizeof(server_mesg), 0);
-		}
-	}
-
-	bzero(buff_out, BUFFER_SZ);
-
-	while (1) {
-		if (leave_flag) {
-			break;
-		}
-
-		int receive = recv(cli->sockfd, buff_out, BUFFER_SZ, 0);
-		if (receive > 0) {
-			if (strlen(buff_out) > 0) {
-				send_message(buff_out, cli->uid, 0);
-				printf("%s -> %s\n", buff_out, cli->name);
-			}
-		}
-		else if (receive == 0 || strcmp(buff_out, "exit") == 0) {
-			sprintf(buff_out, "%s has left\n", cli->name);
-			printf("%s", buff_out);
-			send_message(buff_out, cli->uid, 1);
-			leave_flag = 1;
-		}
-		else {
-			printf("ERROR: -1\n");
-			leave_flag = 1;
-		}
-
-		bzero(buff_out, BUFFER_SZ);
-	}
-}
+void* client_handle(void* arg);
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
@@ -161,92 +19,160 @@ int main(int argc, char* argv[]) {
 			return EXIT_FAILURE;
 		}
 
-		int port = atoi(argv[1]);
-		int option = 1;
-		int listenfd = 0, connfd = 0;
-		struct sockaddr_in serv_addr;
-		struct sockaddr_in cli_addr;
-		pthread_t tid;
+	int listenfd, * connfd;
+	int break_nested_loop = 0;
+	struct sockaddr_in server, * client; // Server's address information
+	int sin_size;
+	pthread_t tid;
+	int bytes_received, bytes_sent;
+	int current_joined;
+	char temp[300];
 
-		int bytes_received, bytes_sent;
-		int current_joined;
+	// Ignore SIGPIPE signal (when server try to send data to client but client is disconnected)
+	sigaction(SIGPIPE, &(struct sigaction){SIG_IGN}, NULL);
 
-		// Create new communicate message variable
-		conn_msg_type conn_msg;
+	// Create new communicate message variable
+	conn_msg_type conn_msg;
 
-		/* Socket settings */
-		listenfd = socket(AF_INET, SOCK_STREAM, 0);
-		if (listenfd < 0) {
-			printf("Error in connection.\n");
-			exit(1);
-		}
-		printf("Server Socket is created.\n");
+	/* Socket settings */
+	if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+	{ /* calls sockets() */
+		perror("\nError: ");
+		return 0;
+	}
+	printf("Server Socket is created.\n");
 
-		serv_addr.sin_family = AF_INET;
-		serv_addr.sin_port = htons(port);
-		serv_addr.sin_addr.s_addr = INADDR_ANY;
+	bzero(&server, sizeof(server));
+	server.sin_family = AF_INET;
+	server.sin_port = htons(atoi(argv[1]));
+	server.sin_addr.s_addr = htonl(INADDR_ANY);
+	
+	if (bind(listenfd, (struct sockaddr*)&server, sizeof(server)) == -1)
+	{
+		perror("\nError: ");
+		return 0;
+	}
 
-		/* Ignore pipe signals */
-		signal(SIGPIPE, SIG_IGN);
+	if (listen(listenfd, BACKLOG) == -1)
+	{
+		perror("\nError: ");
+		return 0;
+	}
 
-		if (setsockopt(listenfd, SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR), (char*)&option, sizeof(option)) < 0) {
-			perror("ERROR: setsockopt failed");
-			return EXIT_FAILURE;
-		}
+	sin_size = sizeof(struct sockaddr_in);
+	client = malloc(sin_size);
 
-		/* Bind */
-		if (bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-			perror("ERROR: Socket binding failed");
-			return EXIT_FAILURE;
-		}
-		printf("Bind to port %d\n", port);
-		/* Listen */
-		if (listen(listenfd, 10) < 0) {
-			perror("ERROR: Socket listening failed");
-			return EXIT_FAILURE;
-		}
+	printf("=== List account ===\n");
+	createSingleList(&list);
+	readPlayerData(&list);
+	printSingleList(&list);
 
-		printf("=== List account ===\n");
-		createSingleList(&list);
-		readPlayerData(&list);
-		printSingleList(&list);
+	while (1)
+	{
+		client_room_type* client_room = init_client_room();
+		waiting_room_type waiting_room = init_waiting_room();
+		current_joined = 0;
 
+		
+	
+		break_nested_loop = 0;
 
-		while (1) {
-			client_room_type* client_room = init_client_room();
-			current_joined = 0;
+		while (current_joined<2)
+			{
 
-
-			socklen_t clilen = sizeof(cli_addr);
-			connfd = accept(listenfd, (struct sockaddr*)&cli_addr, &clilen);
-
-			/* Check if max clients is reached */
-			if ((cli_count + 1) == MAX_CLIENTS) {
-				printf("Max clients reached. Rejected: ");
-				print_client_addr(cli_addr);
-				printf(":%d\n", cli_addr.sin_port);
-				close(connfd);
+			if ((client_room->connfd[current_joined] = accept(listenfd, (struct sockaddr*)client, &sin_size)) == -1)
+				perror("\nError: ");
+			printf("You got a connection from %s\n", inet_ntoa((*client).sin_addr)); /* Print client's IP */
+			
+			// Receive username from client
+			bytes_received = recv(client_room->connfd[current_joined], &conn_msg, sizeof(conn_msg), 0);
+			if (bytes_received <= 0)
+			{
+				close(client_room->connfd[current_joined]);
 				continue;
 			}
 
-			/* Client settings */
-			client_t* cli = (client_t*)malloc(sizeof(client_t));
-			cli->address = cli_addr;
-			cli->sockfd = connfd;
-			cli->uid = uid++;
+			if (break_nested_loop)
+			{
+				close(client_room->connfd[current_joined]);
+				continue;
+			}
 
+			printf("Waiting room: received %d bytes\n", bytes_received);
+			fflush(stdout);
+			strcpy(client_room->username[current_joined], conn_msg.data.player.user_name);
+			strcpy(waiting_room.player[current_joined].user_name, conn_msg.data.player.user_name);
 
-			printf("=== Chat room ===\n");
-			readFile();
+			// Set active status
+			client_room->status[current_joined] = 1;
 
-			/* Add client to the queue and fork thread */
-			queue_add(cli);
-			pthread_create(&tid, NULL, &handle_client, (void*)cli);
+			client_room->joined++;
+			waiting_room.joined++;
 
-			/* Reduce CPU usage */
-			sleep(1);
+			// Send waiting room to client
+			copy_waiting_room_type(&conn_msg.data.waiting_room, waiting_room);
+			conn_msg = make_conn_msg(WAITING_ROOM, conn_msg.data);
+			send_all(*client_room, conn_msg);
+
+			current_joined++;
 		}
 
-		return EXIT_SUCCESS;
+		// For each client's room, spawns a thread, and the thread handles the new client's room
+		pthread_create(&tid, NULL, &client_handle, (void*)client_room);
+	}
 	}
 
+
+void* client_handle(void* arg)
+{
+
+		int i;
+		srand(time(0));
+		client_room_type client_room = *(client_room_type*)arg;
+
+		free(arg);
+		int correct = 1;
+
+		int bytes_sent, bytes_received;
+		conn_msg_type conn_msg;
+
+		// Init game state
+		game_state_type game_state = init_game_state();
+
+		// Init player
+		for (i = 0; i < client_room.joined; i++)
+		{
+			game_state.player[i] = init_player(client_room.username[i], client_room.connfd[i]);
+		}
+
+		for (i = 0; i < client_room.joined; i++)
+		{
+			printf("Player %d: %s\n", i, game_state.player[i].user_name);
+		}
+		int current_joined = 0;
+		while (current_joined <2)
+		{
+			recv(client_room.connfd[current_joined], &conn_msg, sizeof(conn_msg), 0);
+			strcpy(client_room.point[current_joined], conn_msg.data.player.cur_point);
+			current_joined++;
+		}
+
+
+		if (client_room.point[1] > client_room.point[2])
+		{
+			printf("Player %s win  \n", client_room.username[1]);
+		}
+		else
+		{
+			printf("Player %s win  \n", client_room.username[2]);
+		}
+		// Send game summary to all clients
+		copy_game_state_type(&conn_msg.data.game_state, game_state);
+		conn_msg = make_conn_msg(END_GAME, conn_msg.data);
+		send_all(client_room, conn_msg);
+
+		printf("Close thread\n");
+		pthread_exit(NULL);
+
+	
+}

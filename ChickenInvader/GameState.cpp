@@ -2,8 +2,8 @@
 
 
 
-GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	: State(window,supportedKeys,states)
+GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, Handler* handler)
+	: State(window,supportedKeys,states,handler)
 {
 	//this->initWindow();
 	this->initTextures();
@@ -14,7 +14,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	this->initPlayer();
 	this->initCheckens();
-	
+	//this->initSocket();
 	//this->run();
 }
 
@@ -178,6 +178,10 @@ void GameState::run()
 	{
 		if (this->player->getHp() > 0)
 			this->update(this->dt);
+		if (this->player->getHp() < 0)
+		{
+			handler->sendPoint(this->points);
+		}
 	}
 	
 ;

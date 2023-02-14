@@ -17,6 +17,7 @@ typedef enum conn_msg_type_type_t
     WAITING_ROOM,
     GAME_STATE,
     NOTIFICATION,
+    POINT,
     END_GAME
 } conn_msg_type_type;
 
@@ -25,6 +26,7 @@ typedef union conn_data_type_R
 {
     game_state_type game_state;
     player_type player;
+    player_point_type player_point;
     waiting_room_type waiting_room;
     char notification[300];
 } conn_data_type;
@@ -41,6 +43,7 @@ typedef struct client_room_type_t
 {
     int connfd[2];
     char username[2][50];
+    int point[2];
     // status of client
     // 0: not ready, 1: ready, 2: finished
     int status[2];
@@ -52,7 +55,7 @@ conn_msg_type make_conn_msg(conn_msg_type_type type, conn_data_type data);
 
 client_room_type* init_client_room();
 
-
+void send_all(client_room_type client_room, conn_msg_type conn_msg);
 
 
 

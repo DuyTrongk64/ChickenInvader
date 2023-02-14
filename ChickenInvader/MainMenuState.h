@@ -22,8 +22,9 @@ protected:
     void intKeybinds();
     void initButtons();
     void initWorld();
+
 public:
-    MainMenuState(sf::RenderWindow* window, std::map<std::string,int>* supportedKeys, std::stack<State*>* states);
+    MainMenuState(sf::RenderWindow* window, std::map<std::string,int>* supportedKeys, std::stack<State*>* states, Handler* handler);
     virtual ~MainMenuState();
 
     //Functions

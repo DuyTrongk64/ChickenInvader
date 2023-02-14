@@ -1,11 +1,11 @@
 ﻿  Account.c
-C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
+C:\Users\Admin\Documents\chicken\clone\1\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
   Client.c
-C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
+C:\Users\Admin\Documents\chicken\clone\1\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
   GameStruct.c
-C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
+C:\Users\Admin\Documents\chicken\clone\1\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
   Handler.c
-C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
+C:\Users\Admin\Documents\chicken\clone\1\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
   Server.c
-C:\Users\Admin\Documents\chicken\clone\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
+C:\Users\Admin\Documents\chicken\clone\1\ChickenInvader\ChickenInvader\SK_lib.h(1,10): fatal  error C1083: Cannot open include file: 'sys/socket.h': No such file or directory
   Generating Code...

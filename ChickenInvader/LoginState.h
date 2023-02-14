@@ -24,7 +24,9 @@ protected:
     sf::Text mine;
     sf::Text yours;
     sf::Text done;
-
+    
+    char username[20];
+    char password[20];
     std::string user_name;
     std::string pass_word;
 
@@ -43,9 +45,10 @@ protected:
     void initTextbox(std::string text);
     void initText();
     void initBorder();
+
 public:
     
-    LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+    LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, Handler* handler);
     virtual ~LoginState();
 
     //Functions

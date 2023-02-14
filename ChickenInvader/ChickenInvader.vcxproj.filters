@@ -69,7 +69,7 @@
     <ClCompile Include="Account.c">
       <Filter>Socket</Filter>
     </ClCompile>
-    <ClCompile Include="Handler.c">
+    <ClCompile Include="Handler.cpp">
       <Filter>Socket</Filter>
     </ClCompile>
     <ClCompile Include="GameStruct.c">

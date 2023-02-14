@@ -43,13 +43,14 @@ void MainMenuState::initButtons()
 	this->buttons["EXIT"] = new Buttons(325, 500, 150, 50, &this->font, "Quit");
 }
 
-MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
-	:State(window,supportedKeys,states)
+MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, Handler* handler)
+	:State(window,supportedKeys,states,handler)
 {
 	this->initFonts();
 	this->intKeybinds();
 	this->initButtons();
 	this->initWorld();
+	//this->initSocket();
 }
 
 MainMenuState::~MainMenuState()
@@ -77,7 +78,7 @@ void MainMenuState::updateButtons()
 
 	if (this->buttons["PLAY_VS_AI"]->isPressed())
 	{
-		this->states->push(new GameState(this->window, this->supportedKeys,this->states));
+		this->states->push(new GameState(this->window, this->supportedKeys,this->states,this->handler));
 	}
 	if (this->buttons["EXIT"]->isPressed())
 	{

@@ -6,25 +6,51 @@
 #include "GameStruct.h"
 
 #define LENGTH 2048
+#define server_ip "127.0.0.1"
+#define server_port 5500
+class Handler
+{
+public:
 
-int connect_to_server();
 
-int disconnect_from_server();
+	conn_data_type conn_data;
+	conn_msg_type conn_msg;
+	char username[20];
+	char password[20];
+	int client_sock = 0;
+	struct sockaddr_in server_addr;
+	int bytes_sent, bytes_received, sin_size;
 
-bool login(char user_name[], char pass_word[]);
+	Handler();
+	virtual ~Handler();
 
-void send_server();
+	int connect_to_server();
 
-void receive_server();
+	int disconnect_from_server();
 
-int getClient();
+	bool login(char user_name[], char pass_word[]);
 
-void send_msg_handler();
+	void send_server();
 
-void recv_msg_handler();
+	void receive_server();
 
-void messs();
+	void wait();
 
-void str_trim_lf(char* arr, int length);
+	void send_server(int connfd, conn_msg_type conn_msg);
+
+	void print_waiting_room(waiting_room_type waiting_room);
+
+	void print_game_state(game_state_type game_state);
+
+	void handle_game_state(game_state_type* game_state);
+
+	void print_notification(char* notification);
+
+	void sendPoint(int point);
+
+	void join(char username[20]);
+};
+
+
 #endif // !HANDLER_H
 

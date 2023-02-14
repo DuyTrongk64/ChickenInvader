@@ -53,7 +53,7 @@ void Game::initKeys()
 
 void Game::initStates()
 {
-	this->states.push(new LoginState(this->window,&this->supportedKeys, &this->states));
+	this->states.push(new LoginState(this->window,&this->supportedKeys, &this->states,this->handler));
 }
 
 //Constructors/Destructors
@@ -153,9 +153,6 @@ int main()
 	LoginState* Login;
 	Game game;
 	game.run();
-	
-
-	connect_to_server();
 	
 	
 	/*strcpy(username, Login->getUsername().c_str());

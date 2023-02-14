@@ -62,8 +62,9 @@ private:
 	void initCheckens();
 	void initckBullets();
     void initKeybinds();
+
 public:
-    GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+    GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, Handler* handler);
     virtual ~GameState();
 
     //Functions

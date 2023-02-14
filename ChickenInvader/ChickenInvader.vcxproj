@@ -141,7 +141,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStruct.c" />
-    <ClCompile Include="Handler.c" />
+    <ClCompile Include="Handler.cpp" />
     <ClCompile Include="LoginState.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Player.cpp" />

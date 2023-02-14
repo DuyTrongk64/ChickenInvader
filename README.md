@@ -2,4 +2,11 @@
 
 compile on linux:
 
-g++ -pthread -o main Main.cpp Buttons.cpp Game.cpp GameState.cpp LoginState.cpp MainMenuState.cpp State.cpp Textbox.cpp Chickens.cpp ckBullets.cpp Player.cpp plBullet.cpp Client.cpp -lsfml-graphics -lsfml-window -lsfml-system
+game: 
+
+g++ -pthread -o game  Game.cpp Buttons.cpp GameState.cpp LoginState.cpp MainMenuState.cpp State.cpp Textbox.cpp Chickens.cpp ckBullets.cpp Player.cpp plBullet.cpp Account.c GameStruct.c Handler.cpp -lsfml-graphics -lsfml-window -lsfml-system
+
+server:
+
+gcc -pthread -o server server.c Account.c GameStruct.c
+

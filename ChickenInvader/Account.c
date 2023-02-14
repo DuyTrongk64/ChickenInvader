@@ -1,10 +1,12 @@
 #include "Account.h"
 // Function's body
-player_type init_player(char username[])
+player_type init_player(char username[],int id)
 {
     player_type player;
+
     strcpy(player.user_name, username);
     player.cur_point = 0;
+    player.id = id;
     return player;
 }
 
@@ -36,6 +38,11 @@ void copy_waiting_room_type(waiting_room_type* dest, waiting_room_type src)
     dest->joined = src.joined;
 }
 
+void copy_sub_question_type(player_point_type* dest, player_point_type src)
+{
+    dest->point = src.point;
+    strcpy(dest->username, src.username);
+}
 void copy_game_state_type(game_state_type* dest, game_state_type src)
 {
     for (int i = 0; i < 2; i++)

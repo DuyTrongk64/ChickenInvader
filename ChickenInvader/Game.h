@@ -18,6 +18,7 @@ private:
 	std::stack<State*> states;
 
 	std::map<std::string, int> supportedKeys;
+	Handler* handler;
 
 	float gridSize;
 
