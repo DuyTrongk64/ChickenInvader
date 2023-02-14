@@ -133,17 +133,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Account.c" />
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Chickens.cpp" />
     <ClCompile Include="ckBullets.cpp" />
+    <ClCompile Include="Client.c" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GameStruct.c" />
+    <ClCompile Include="Handler.c" />
     <ClCompile Include="LoginState.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="plBullet.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Server.c" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Textbox.cpp" />
   </ItemGroup>
@@ -154,15 +157,19 @@
     <ClInclude Include="ckBullets.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStruct.h" />
     <ClInclude Include="Handler.h" />
     <ClInclude Include="lib.h" />
     <ClInclude Include="LoginState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="plBullet.h" />
-    <ClInclude Include="Server.h" />
+    <ClInclude Include="SK_lib.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Textbox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Account.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

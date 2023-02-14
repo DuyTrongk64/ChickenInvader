@@ -28,4 +28,5 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
+#include "Handler.h"
 #endif // !lib_H

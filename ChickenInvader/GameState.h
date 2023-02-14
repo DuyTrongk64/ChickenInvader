@@ -2,9 +2,10 @@
 #define GAMESTATE_H
 
 #include "lib.h"
+
 #include "Buttons.h"
 #include "State.h"
-#include "MainMenuState.h"
+#include "LoginState.h"
 
 class GameState :
     public State

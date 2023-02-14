@@ -2,11 +2,11 @@
 #define LOGINSTATE_H
 
 #include "lib.h"
-
 #include "MainMenuState.h"
 #include "Buttons.h"
 #include "Textbox.h"
-//#include "Client.h"
+#include "Game.h"
+
 
 class LoginState:
     public State
@@ -19,7 +19,7 @@ protected:
     std::map<std::string, Buttons*> buttons;
     std::map<std::string, sf::Text> text;
     sf::RectangleShape border, border1;
-    //Client* client;
+    
 
     sf::Text mine;
     sf::Text yours;
@@ -52,6 +52,8 @@ public:
     std::string fromKtoS(const sf::Keyboard::Key& k);
     void endState();
     void addplayer(std::string user_name, std::string pass_word );
+    std::string getUsername();
+    std::string getPassword();
     void updateText();
     void updateButtons();
    

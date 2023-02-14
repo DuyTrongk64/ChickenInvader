@@ -23,6 +23,7 @@ private:
 
 	bool inmain = true;
 
+	
 	//Initialization
 	void initVariables();
 	
@@ -40,7 +41,7 @@ public:
 
 	//Regular
 	void endApplication();
-
+	
 	//Update
 	void updateDt();
 	void updateSFMLEvents();

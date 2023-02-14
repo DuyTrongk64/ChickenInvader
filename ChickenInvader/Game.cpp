@@ -1,6 +1,11 @@
 #include "Game.h"
 
-//Static functions
+extern conn_msg_type conn_msg;
+extern char username[20];
+extern char password[20];
+extern int bytes_received;
+extern int bytes_sent;
+extern int client_sock;
 
 //Initializer functions
 void Game::initVariables()
@@ -79,6 +84,7 @@ void Game::endApplication()
 	std::cout << "Ending Application!" << "\n";
 }
 
+
 void Game::updateDt()
 {
 	/*Updates the dt variable with the time it takes to update and render one frame.*/
@@ -142,3 +148,20 @@ void Game::run()
 	}
 }
 
+int main()
+{
+	LoginState* Login;
+	Game game;
+	game.run();
+	
+
+	connect_to_server();
+	
+	
+	/*strcpy(username, Login->getUsername().c_str());
+	str_trim_lf(username, strlen(username));
+	strcpy(password, Login->getPassword().c_str());
+	str_trim_lf(password, strlen(password));
+
+	Login->updateButtons(login(username, password));*/
+}

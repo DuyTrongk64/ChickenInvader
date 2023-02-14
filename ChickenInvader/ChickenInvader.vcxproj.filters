@@ -22,11 +22,11 @@
     <Filter Include="Socket">
       <UniqueIdentifier>{91b78ced-20db-400f-b08c-1c60fc4372bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="file">
+      <UniqueIdentifier>{8c6e568d-5414-480b-b27a-a09c40201102}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,7 +60,19 @@
     <ClCompile Include="GameState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="Server.c">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.c">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Account.c">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Handler.c">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStruct.c">
       <Filter>Socket</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,14 +113,22 @@
     <ClInclude Include="State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Handler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameStruct.h">
+      <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="Account.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Handler.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="SK_lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Account.txt">
+      <Filter>file</Filter>
+    </Text>
   </ItemGroup>
 </Project>

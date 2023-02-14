@@ -1,5 +1,11 @@
 #include "LoginState.h"
 
+extern conn_msg_type conn_msg;
+extern char username[20];
+extern char password[20];
+extern int bytes_received;
+extern int bytes_sent;
+extern int client_sock;
 
 void LoginState::initFonts()
 {
@@ -133,6 +139,7 @@ void LoginState::initButtons()
 LoginState::LoginState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	:State(window, supportedKeys, states)
 {
+	
 	this->initFonts();
 	this->intKeybinds();
 	this->initButtons();
@@ -159,6 +166,16 @@ void LoginState::endState()
 void LoginState::addplayer(std::string user_name, std::string pass_word)
 {
 
+}
+
+std::string LoginState::getUsername()
+{
+	return this->user_name;
+}
+
+std::string LoginState::getPassword()
+{
+	return this->pass_word;
 }
 
 void LoginState::updateText()
@@ -192,7 +209,15 @@ void LoginState::updateButtons()
 	
 	if (this->buttons["LOG_IN"]->isPressed())
 	{
-		this->states->push(new MainMenuState(this->window, this->supportedKeys, this->states));
+		strcpy(username, this->user_name.c_str());
+		str_trim_lf(username, strlen(username));
+		strcpy(password, this->pass_word.c_str());
+		str_trim_lf(password, strlen(password));
+		if (login(username, password))
+			this->states->push(new MainMenuState(this->window, this->supportedKeys, this->states));
+		else
+		std::cout << "dang nhap that bai\n";
+		//messs();
 	}
 	if (this->buttons["SIGN_IN"]->isPressed())
 	{
@@ -257,107 +282,107 @@ std::string LoginState::fromKtoS(const sf::Keyboard::Key& k) {
 
 	case sf::Keyboard::A:
 
-		ret = "A";
+		ret = "a";
 		break;
 	case sf::Keyboard::B:
 
-		ret = "B";
+		ret = "b";
 		break;
 	case sf::Keyboard::C:
 
-		ret = "C";
+		ret = "c";
 		break;
 	case sf::Keyboard::D:
 
-		ret = "D";
+		ret = "d";
 		break;
 	case sf::Keyboard::E:
 
-		ret = "E";
+		ret = "e";
 		break;
 	case sf::Keyboard::F:
 
-		ret = "F";
+		ret = "f";
 		break;
 	case sf::Keyboard::G:
 
-		ret = "G";
+		ret = "g";
 		break;
 	case sf::Keyboard::H:
 
-		ret = "H";
+		ret = "h";
 		break;
 	case sf::Keyboard::I:
 
-		ret = "I";
+		ret = "i";
 		break;
 	case sf::Keyboard::J:
 
-		ret = "J";
+		ret = "j";
 		break;
 	case sf::Keyboard::K:
 
-		ret = "K";
+		ret = "k";
 		break;
 	case sf::Keyboard::L:
 
-		ret = "L";
+		ret = "l";
 		break;
 	case sf::Keyboard::M:
 
-		ret = "M";
+		ret = "m";
 		break;
 	case sf::Keyboard::N:
 
-		ret = "N";
+		ret = "n";
 		break;
 	case sf::Keyboard::O:
 
-		ret = "O";
+		ret = "o";
 		break;
 	case sf::Keyboard::P:
 
-		ret = "P";
+		ret = "p";
 		break;
 	case sf::Keyboard::Q:
 
-		ret = "Q";
+		ret = "q";
 		break;
 	case sf::Keyboard::R:
 
-		ret = "R";
+		ret = "r";
 		break;
 	case sf::Keyboard::S:
 
-		ret = "S";
+		ret = "s";
 		break;
 	case sf::Keyboard::T:
 
-		ret = "T";
+		ret = "t";
 		break;
 	case sf::Keyboard::U:
 
-		ret = "U";
+		ret = "u";
 		break;
 	case sf::Keyboard::V:
 
-		ret = "V";
+		ret = "v";
 		break;
 	case sf::Keyboard::W:
 
-		ret = "W";
+		ret = "w";
 		break;
 	case sf::Keyboard::X:
 
-		ret = "X";
+		ret = "x";
 		break;
 	case sf::Keyboard::Y:
 
-		ret = "Y";
+		ret = "y";
 		break;
 	case sf::Keyboard::Z:
 
-		ret = "Z";
+		ret = "z";
 		break;
 	case sf::Keyboard::Num0:
 
