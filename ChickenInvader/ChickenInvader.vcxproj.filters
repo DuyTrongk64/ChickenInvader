@@ -75,6 +75,9 @@
     <ClCompile Include="GameStruct.c">
       <Filter>Socket</Filter>
     </ClCompile>
+    <ClCompile Include="SingleGameState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -123,6 +126,9 @@
       <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="SK_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

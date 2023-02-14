@@ -147,6 +147,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="plBullet.cpp" />
     <ClCompile Include="Server.c" />
+    <ClCompile Include="SingleGameState.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Textbox.cpp" />
   </ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="plBullet.h" />
+    <ClInclude Include="SingleGameState.h" />
     <ClInclude Include="SK_lib.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Textbox.h" />

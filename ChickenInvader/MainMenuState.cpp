@@ -78,8 +78,14 @@ void MainMenuState::updateButtons()
 
 	if (this->buttons["PLAY_VS_AI"]->isPressed())
 	{
-		this->states->push(new GameState(this->window, this->supportedKeys,this->states,this->handler));
+		this->states->push(new SingleGameState(this->window, this->supportedKeys,this->states,this->handler));
 	}
+
+	if (this->buttons["CHALLENGE"]->isPressed())
+	{
+		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->handler));
+	}
+
 	if (this->buttons["EXIT"]->isPressed())
 	{
 		this->quit=true;

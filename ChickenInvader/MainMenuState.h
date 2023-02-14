@@ -3,6 +3,7 @@
 #include "lib.h"
 
 #include "GameState.h"
+#include "SingleGameState.h"
 #include "Buttons.h"
 
 class MainMenuState :
